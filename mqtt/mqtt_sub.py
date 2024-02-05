@@ -40,7 +40,7 @@ class MqttSub(MqttClient):
     def __on_message(self, _1, _2, message):
         try:
             payload = str(message.payload, "utf-8")
-            self.callback(payload)
+            self.callback(payload, message.topic)
         except Exception as e:
             self.close(e)
             raise e
