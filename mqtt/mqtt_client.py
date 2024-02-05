@@ -6,10 +6,12 @@ import paho.mqtt.client as mqtt
 
 
 class MqttClient:
-    def __init__(self, monitor, mqtt_server, mqtt_port, topic):
+    def __init__(self, monitor, mqtt_server, mqtt_port, mqtt_username, mqtt_password, topic):
         monitor.register_client(self)
         self.mqtt_server = mqtt_server
         self.mqtt_port = mqtt_port
+        self.mqtt_username = mqtt_username
+        self.mqtt_password = mqtt_password
         self.topic = topic
         self.active = True
         self.loop_thread = None
@@ -21,6 +23,7 @@ class MqttClient:
         client.on_connect = self.on_connect
         if self.mqtt_port == 8883:
             client.tls_set()
+        client.username_pw_set(self.mqtt_username, self.mqtt_password)
         return client
 
     def get_client_id(self):

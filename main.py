@@ -14,15 +14,15 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s [%(levelname)s] %(m
 
 def main(args):
     monitor = MqttClientMonitor()
-    publisher = MqttPub(monitor, args.dst_mqtt_server, args.dst_mqtt_port, args.topic, QOS)
+    publisher = MqttPub(monitor, args.dst_mqtt_server, args.dst_mqtt_port, args.dst_mqtt_username, args.dst_mqtt_password, args.topic, QOS)
 
-    def on_message(msg):
+    def on_message(msg, topic):
         publisher.publish(msg)
         logging.debug(
             f"Message '{msg}' forwarded "
-            f"from {args.src_mqtt_server} to {args.dst_mqtt_server} on topic {args.topic}")
+            f"from {args.src_mqtt_server} to {args.dst_mqtt_server} on topic {topic}")
 
-    subscriber = MqttSub(monitor, args.src_mqtt_server, args.src_mqtt_port, args.topic, QOS, on_message)
+    subscriber = MqttSub(monitor, args.src_mqtt_server, args.src_mqtt_port, args.src_mqtt_username, args.src_mqtt_password, args.topic, QOS, on_message)
 
     publisher.start()
     subscriber.start()
@@ -44,8 +44,12 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--src-mqtt-server", required=True)
     parser.add_argument("--src-mqtt-port", type=int, default=1883)
+    parser.add_argument("--src-mqtt-username")
+    parser.add_argument("--src-mqtt-password")
     parser.add_argument("--dst-mqtt-server", required=True)
     parser.add_argument("--dst-mqtt-port", type=int, default=1883)
+    parser.add_argument("--dst-mqtt-username")
+    parser.add_argument("--dst-mqtt-password")
     parser.add_argument("--topic", required=True)
     args = parser.parse_args()
 

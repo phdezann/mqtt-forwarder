@@ -8,8 +8,8 @@ from mqtt.mqtt_client import MqttClient
 
 
 class MqttSub(MqttClient):
-    def __init__(self, monitor, mqtt_server, mqtt_port, topic, qos, callback, sub_group=None, timeout=5):
-        super().__init__(monitor, mqtt_server, mqtt_port, self.__to_topic_name(topic, sub_group))
+    def __init__(self, monitor, mqtt_server, mqtt_port, mqtt_username, mqtt_password, topic, qos, callback, sub_group=None, timeout=5):
+        super().__init__(monitor, mqtt_server, mqtt_port, mqtt_username, mqtt_password, self.__to_topic_name(topic, sub_group))
         self.client_uuid = uuid.uuid4()
         self.qos = qos
         self.callback = callback
