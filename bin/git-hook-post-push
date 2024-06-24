@@ -3,11 +3,10 @@
 
 set -e -u
 
-host="mosquito"
-service_name="mqtt-forwarder"
-
 echo "Restarting service..."
-ssh "${host}" "sudo systemctl restart ${service_name}"
+ssh fly "sudo systemctl restart mqtt-forwarder-event"
+ssh fly "sudo systemctl restart mqtt-forwarder-debug"
 
-echo "Tailing logs..."
-ssh "${host}" "sudo journalctl -n 100 -f -u ${service_name}"
+echo "Logs available at..."
+echo ssh fly "sudo journalctl -n 100 -f -u mqtt-forwarder-event"
+echo ssh fly "sudo journalctl -n 100 -f -u mqtt-forwarder-debug"
