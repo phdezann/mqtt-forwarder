@@ -14,7 +14,9 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s [%(levelname)s] %(m
 
 def main(args):
     monitor = MqttClientMonitor()
-    publisher = MqttPub(monitor, args.dst_mqtt_server, args.dst_mqtt_port, args.dst_mqtt_username, args.dst_mqtt_password, args.topic, QOS)
+    publisher = MqttPub(monitor, args.dst_mqtt_server, args.dst_mqtt_port, args.topic, QOS,
+                        mqtt_username=args.dst_mqtt_username,
+                        mqtt_password=args.dst_mqtt_password)
 
     def on_message(msg, topic):
         publisher.publish(msg)
@@ -22,7 +24,9 @@ def main(args):
             f"Message '{msg}' forwarded "
             f"from {args.src_mqtt_server} to {args.dst_mqtt_server} on topic {topic}")
 
-    subscriber = MqttSub(monitor, args.src_mqtt_server, args.src_mqtt_port, args.src_mqtt_username, args.src_mqtt_password, args.topic, QOS, on_message)
+    subscriber = MqttSub(monitor, args.src_mqtt_server, args.src_mqtt_port, args.topic, QOS, on_message,
+                         mqtt_username=args.src_mqtt_username,
+                         mqtt_password=args.src_mqtt_password)
 
     publisher.start()
     subscriber.start()
