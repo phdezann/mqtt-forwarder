@@ -1,0 +1,1 @@
+This projects forwards every message from one MQTT broker to another. The same topic is used in both broker.
